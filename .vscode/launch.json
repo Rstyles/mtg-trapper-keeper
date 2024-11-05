@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "name": "Python Debugger: Module",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "api.v1.api"
+    },
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch Console",
+      "program": "${workspaceFolder}/console.py"
+    },
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch API",
+      "program": "${workspaceFolder}/api/v1/api.py"
+    }
+  ]
+}
