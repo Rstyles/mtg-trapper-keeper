@@ -8,9 +8,22 @@ app = Flask(__name__)
 mtg_repo = MTGRepository()
 collection_repo = CollectionRepository()
 
-@app.route("/card/list", methods=['GET'], strict_slashes=False)
-@app.route("/card/list/<page>", methods=['GET'], strict_slashes=False)
+@app.route("/search/list", methods=['GET'], strict_slashes=False)
+@app.route("/search/list/<page>", methods=['GET'], strict_slashes=False)
 def get_all_cards(page=1):
+    """
+    Retrieve all Magic: The Gathering cards for a given page.
+
+    Args:
+        page (int, optional): The page number to retrieve cards from. Defaults to 1.
+
+    Returns:
+        flask.Response: A JSON response containing a list of cards, where each card is represented as a dictionary with the following keys:
+            - id (str): The unique identifier of the card.
+            - name (str): The name of the card.
+            - imageUrl (str): The URL of the card's image.
+            - set (str): The set to which the card belongs.
+    """
     cards = mtg_repo.get_cards(page)
     return jsonify([{
         "id": card.id,
@@ -19,7 +32,7 @@ def get_all_cards(page=1):
         "set": card.set
     } for card in cards])
 
-@app.route("/card/search/<name>", methods=['GET'], strict_slashes=False)
+@app.route("/search/<name>", methods=['GET'], strict_slashes=False)
 def search_by_name(name):
     """
     Search for a Magic: The Gathering card by its name.
@@ -39,11 +52,11 @@ def search_by_name(name):
             "name": card.name,
             "imageUrl": card.image_url,
             "set": card.set
-        })
+        }), 200
     else:
         return jsonify({"error": "Card not found"}), 404
 
-@app.route("/card/add", methods=['POST'], strict_slashes=False)
+@app.route("/collection/", methods=['POST'], strict_slashes=False)
 def add_card_to_collection():
     """
     Adds a card to the collection.
@@ -68,20 +81,42 @@ def add_card_to_collection():
     collection_repo.add_card(card)
     return jsonify({"message": "Card added to collection"}), 201
 
-@app.route("/card/collection", methods=['GET'], strict_slashes=False)
+@app.route("/collection/", methods=['GET'], strict_slashes=False)
 def list_collection():
+    """
+    Retrieve a list of cards from the collection repository and return them as a JSON response.
+
+    Returns:
+        Response: A JSON response containing a list of cards, where each card is represented as a dictionary
+        with the following keys:
+            - id (int): The unique identifier of the card.
+            - name (str): The name of the card.
+            - imageUrl (str): The URL of the card's image.
+            - set (str): The set to which the card belongs.
+    """
     cards = collection_repo.get_cards()
     return jsonify([{
         "id": card.id,
         "name": card.name,
         "imageUrl": card.image_url,
         "set": card.set
-    } for card in cards])
+    } for card in cards]), 200
 
-@app.route("/card/delete/<id>", methods=['DELETE'], strict_slashes=False)
+@app.route("/collection/<id>", methods=['DELETE'], strict_slashes=False)
 def delete_card_from_collection(id):
-    pass
+    """
+    Deletes a card from the collection.
+
+    Args:
+        id (int): The ID of the card to delete from the collection.
+
+    Returns:
+        Response: A JSON response with a message indicating the card was deleted
+                  and an HTTP status code 200 (OK).
+    """
+    collection_repo.delete_card(int(id))
+    return jsonify({"message": "Card deleted from collection"}), 200
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5001)
