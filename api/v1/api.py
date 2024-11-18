@@ -34,7 +34,7 @@ def get_all_cards(page=1):
         "set": card.set
     } for card in cards]), 200
 
-@app.route("/search/<name>", methods=['GET'], strict_slashes=False)
+@app.route("/search/card/<name>", methods=['GET'], strict_slashes=False)
 def search_by_name(name):
     """
     Search for a Magic: The Gathering card by its name.
@@ -102,7 +102,7 @@ def list_collection():
         "name": card.name,
         "imageUrl": card.image_url,
         "set": card.set
-    } for card in cards]), 200
+    } for card in cards])
 
 @app.route("/collection/<id>", methods=['DELETE'], strict_slashes=False)
 def delete_card_from_collection(id):
