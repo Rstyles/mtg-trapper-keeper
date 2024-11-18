@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from repositories.mtg_repository import MTGRepository
 from repositories.collection_repository import CollectionRepository
 from models.card import Card
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
 mtg_repo = MTGRepository()
 collection_repo = CollectionRepository()
