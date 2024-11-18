@@ -30,7 +30,7 @@ def get_all_cards(page=1):
         "name": card.name,
         "imageUrl": card.image_url,
         "set": card.set
-    } for card in cards])
+    } for card in cards]), 200
 
 @app.route("/search/<name>", methods=['GET'], strict_slashes=False)
 def search_by_name(name):
